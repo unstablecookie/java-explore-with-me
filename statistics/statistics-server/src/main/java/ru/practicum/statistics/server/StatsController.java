@@ -20,7 +20,7 @@ public class StatsController {
     public List<ViewStatsDto> getStatistics(@RequestParam(required = true) LocalDateTime start,
                                             @RequestParam(required = true) LocalDateTime end,
                                             @RequestParam(required = false) List<String> uris,
-                                            @RequestParam boolean unique) {
+                                            @RequestParam(defaultValue = "false") boolean unique) {
         return statsService.getStatistics(start, end, uris, unique);
     }
 
