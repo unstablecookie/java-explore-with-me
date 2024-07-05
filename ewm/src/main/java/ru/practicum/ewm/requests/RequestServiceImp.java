@@ -145,7 +145,7 @@ public class RequestServiceImp implements RequestService {
                 if (event.getConfirmedRequests() < event.getParticipantLimit()) {
                     x.setStatus(RequestStatus.CONFIRMED);
                     event.setConfirmedRequests(event.getConfirmedRequests() + 1);
-                } else if (event.getConfirmedRequests() == event.getParticipantLimit()) {
+                } else if (event.getConfirmedRequests().equals(event.getParticipantLimit())) {
                     x.setStatus(RequestStatus.REJECTED);
                 }
             });
