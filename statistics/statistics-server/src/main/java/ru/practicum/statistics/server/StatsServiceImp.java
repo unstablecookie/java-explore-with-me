@@ -1,9 +1,11 @@
 package ru.practicum.statistics.server;
 
+import ru.practicum.statistics.dto.EndpointHitDto;
 import ru.practicum.statistics.dto.ViewStatsDto;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
-import ru.practicum.statistics.server.model.EndpointHit;
+import ru.practicum.statistics.server.dto.EndpointHitMapper;
+import ru.practicum.statistics.server.error.InputParametersException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,6 +18,9 @@ public class StatsServiceImp implements StatsService {
 
     @Override
     public List<ViewStatsDto> getStatistics(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
+        if (end.isBefore(start)) {
+            throw new InputParametersException("the end cannot be before the start", "wrong input data");
+        }
         if (uris != null) {
             return prepareUniqueStatisticsWithUris(start, end, uris, unique);
         }
@@ -23,8 +28,8 @@ public class StatsServiceImp implements StatsService {
     }
 
     @Override
-    public void addHit(EndpointHit endpointHit) {
-        statsRepository.save(endpointHit);
+    public void addHit(EndpointHitDto endpointHitDto) {
+        statsRepository.save(EndpointHitMapper.toEndpointHit(endpointHitDto));
     }
 
     private List<ViewStatsDto> prepareUniqueStatistics(LocalDateTime start, LocalDateTime end, boolean unique) {
