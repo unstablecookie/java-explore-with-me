@@ -15,6 +15,8 @@ import ru.practicum.ewm.error.InputParametersException;
 import ru.practicum.ewm.events.dto.*;
 import ru.practicum.ewm.events.model.*;
 import ru.practicum.ewm.locations.LocationRepository;
+import ru.practicum.ewm.locations.dto.IHolder;
+import ru.practicum.ewm.locations.dto.LocationShort;
 import ru.practicum.ewm.locations.model.Location;
 import ru.practicum.ewm.users.UserRepository;
 import ru.practicum.ewm.users.model.User;
@@ -182,6 +184,7 @@ public class EventServiceImp implements EventService {
     }
 
     @Override
+    @Transactional
     public EventFullDto updateEventByUser(UpdateEventUserRequest updateEventUserRequest, Long userId, Long eventId) {
         Event event = eventRepository.findById(eventId).orElseThrow(
                 () -> new EntityNotFoundException(String.format("Event with id=%d was not found", eventId),
@@ -247,6 +250,7 @@ public class EventServiceImp implements EventService {
     }
 
     @Override
+    @Transactional
     public EventFullDto addUserEvent(NewEventDto newEventDto, Long userId) {
         if (newEventDto.getEventDate().isBefore(LocalDateTime.now(ZoneOffset.UTC).plusHours(2))) {
             throw new EventStatusException(String.format("Field: eventDate. Error: должно содержать дату, " +
@@ -281,6 +285,29 @@ public class EventServiceImp implements EventService {
                         "The required object was not found.")
         );
         return EventMapper.toEventFullDto(event);
+    }
+
+    @Override
+    public List<EventFullDto> getEventsAdminByLocation(Long locationId, Float rangeKm) {
+        Location location = locationRepository.findById(locationId).orElseThrow(
+                () -> new EntityNotFoundException(String.format("Location with id=%d was not found", locationId),
+                        "The required object was not found.")
+        );
+        List<LocationShort> locationShorts = new ArrayList<>();
+        IHolder locations = locationRepository.getNearestLocationsInRange(location.getLat(), location.getLon(), rangeKm);
+        for (Object o : locations.getHolders()) {
+            String[] tuple = o.toString().substring(1,o.toString().length() - 1).split(",");
+            locationShorts.add(LocationShort.builder()
+                    .id(Long.valueOf(tuple[0]))
+                    .dist(Float.valueOf(tuple[1]))
+                    .build());
+        }
+        List<Long> locationIds = locationShorts.stream()
+                .map(x -> x.getId())
+                .collect(Collectors.toList());
+        return eventRepository.findAllByLocationIdIn(locationIds).stream()
+                .map(x -> EventMapper.toEventFullDto(x))
+                .collect(Collectors.toList());
     }
 
     private void saveStatistics(HttpServletRequest request) {

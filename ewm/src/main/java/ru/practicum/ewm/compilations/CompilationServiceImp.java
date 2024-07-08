@@ -1,7 +1,6 @@
 package ru.practicum.ewm.compilations;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.compilations.dto.CompilationDto;
@@ -10,7 +9,6 @@ import ru.practicum.ewm.compilations.dto.NewCompilationDto;
 import ru.practicum.ewm.compilations.dto.UpdateCompilationRequest;
 import ru.practicum.ewm.compilations.model.Compilation;
 import ru.practicum.ewm.error.EntityNotFoundException;
-import ru.practicum.ewm.error.IntegrityConflictException;
 import ru.practicum.ewm.events.EventRepository;
 import ru.practicum.ewm.events.model.Event;
 
@@ -33,12 +31,8 @@ public class CompilationServiceImp implements CompilationService {
                 .title(newCompilationDto.getTitle())
                 .events(new HashSet<>(events))
                 .build();
-        try {
-            compilation = compilationRepository.save(compilation);
-            return CompilationMapper.toCompilationDto(compilation);
-        } catch (DataIntegrityViolationException e) {
-            throw new IntegrityConflictException(e.getMessage(), "Integrity constraint has been violated.");
-        }
+        compilation = compilationRepository.save(compilation);
+        return CompilationMapper.toCompilationDto(compilation);
     }
 
     @Override

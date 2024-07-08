@@ -34,6 +34,13 @@ public class EventControllerAdmin {
         return eventService.getEventsAdmin(users, states, categories, rangeStart, rangeEnd, from, size, request);
     }
 
+    @GetMapping("/location/{locationId}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<EventFullDto> getEventsByLocation(@PathVariable Long locationId,
+                                                  @RequestParam Float rangeKm) {
+        return eventService.getEventsAdminByLocation(locationId, rangeKm);
+    }
+
     @PatchMapping("/{eventId}")
     @ResponseStatus(HttpStatus.OK)
     public EventFullDto updateEvent(@RequestBody @Valid UpdateEventAdminRequest updateEventAdminRequest,

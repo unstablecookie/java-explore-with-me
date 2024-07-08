@@ -28,4 +28,6 @@ public interface EventService {
     EventFullDto getUserEvent(Long userId, Long eventId);
 
     EventFullDto updateEventByUser(UpdateEventUserRequest updateEventUserRequest, Long userId, Long eventId);
+
+    List<EventFullDto> getEventsAdminByLocation(Long locationId, Float rangeKm);
 }

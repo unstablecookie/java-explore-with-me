@@ -1,11 +1,9 @@
 package ru.practicum.ewm.users;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.PageRequest;
 import ru.practicum.ewm.error.EntityNotFoundException;
-import ru.practicum.ewm.error.IntegrityConflictException;
 import ru.practicum.ewm.events.EventRepository;
 import ru.practicum.ewm.events.dto.EventMapper;
 import ru.practicum.ewm.events.dto.EventShortDto;
@@ -24,12 +22,8 @@ public class UserServiceImp implements UserService {
 
     @Override
     public UserDto addUser(NewUserRequest newUserRequest) {
-        try {
-            User createdUser = userRepository.save(UserMapper.toUser(newUserRequest));
-            return UserMapper.toUserDto(createdUser);
-        } catch (DataIntegrityViolationException e) {
-            throw new IntegrityConflictException(e.getMessage(), "Integrity constraint has been violated.");
-        }
+        User createdUser = userRepository.save(UserMapper.toUser(newUserRequest));
+        return UserMapper.toUserDto(createdUser);
     }
 
     @Override
