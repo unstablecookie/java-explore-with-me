@@ -1,18 +1,16 @@
-package ru.practicum.ewm.locations.dto;
+package ru.practicum.ewm.locations.types.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import javax.validation.constraints.Size;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class LocationDto {
-    private Float lat;
-    private Float lon;
-    private Float radius;
+public class NewLocationTypeDto {
+    @Size(min = 3, max = 50)
     private String name;
-    private Long type;
 }

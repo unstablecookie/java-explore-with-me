@@ -1,7 +1,6 @@
 package ru.practicum.ewm.categories;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.categories.dto.CategoryDto;
@@ -38,12 +37,8 @@ public class CategoryServiceImp implements CategoryService {
 
     @Override
     public CategoryDto addCategory(NewCategoryDto newCategoryDto) {
-        try {
-            Category category = categoryRepository.save(CategoryMapper.toCategory(newCategoryDto));
-            return CategoryMapper.toCategoryDto(category);
-        } catch (DataIntegrityViolationException e) {
-            throw new IntegrityConflictException(e.getMessage(), "Integrity constraint has been violated.");
-        }
+        Category category = categoryRepository.save(CategoryMapper.toCategory(newCategoryDto));
+        return CategoryMapper.toCategoryDto(category);
     }
 
     @Override
@@ -65,12 +60,8 @@ public class CategoryServiceImp implements CategoryService {
                 () -> new EntityNotFoundException(String.format("Category with id=%d was not found", catId),
                         "The required object was not found.")
         );
-        try {
-            category.setName(categoryDto.getName());
-            Category updatedCategory = categoryRepository.save(category);
-            return CategoryMapper.toCategoryDto(updatedCategory);
-        } catch (DataIntegrityViolationException e) {
-            throw new IntegrityConflictException(e.getMessage(), "Integrity constraint has been violated.");
-        }
+        category.setName(categoryDto.getName());
+        Category updatedCategory = categoryRepository.save(category);
+        return CategoryMapper.toCategoryDto(updatedCategory);
     }
 }
