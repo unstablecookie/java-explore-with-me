@@ -1,6 +1,7 @@
 package ru.practicum.ewm.error;
 
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -76,5 +77,11 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<ErrorResponse> handleInputParametersException(InputParametersException ex) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         return new ResponseEntity<>(new ErrorResponse(status, ex.getMessage(), "Incorrectly made request."), status);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    protected ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        HttpStatus status = HttpStatus.CONFLICT;
+        return new ResponseEntity<>(new ErrorResponse(status, ex.getMessage(), "Integrity constraint has been violated."), status);
     }
 }

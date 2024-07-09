@@ -1,7 +1,6 @@
 package ru.practicum.ewm.requests;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.error.EntityNotFoundException;
@@ -70,12 +69,8 @@ public class RequestServiceImp implements RequestService {
         if (event.getRequestModeration().equals(Boolean.FALSE) || event.getParticipantLimit() == 0) {
             participationRequest.setStatus(RequestStatus.CONFIRMED);
         }
-        try {
-            participationRequest = requestRepository.save(participationRequest);
-            return ParticipationRequestMapper.toParticipationRequestDto(participationRequest);
-        } catch (DataIntegrityViolationException e) {
-            throw new IntegrityConflictException(e.getMessage(), "Integrity constraint has been violated.");
-        }
+        participationRequest = requestRepository.save(participationRequest);
+        return ParticipationRequestMapper.toParticipationRequestDto(participationRequest);
     }
 
     @Override
