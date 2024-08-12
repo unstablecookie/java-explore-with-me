@@ -26,3 +26,6 @@ sudo docker compose up
 in any docker environment.
 
 Main service will use :9090 port and :8080 for statistics. Use /postman folder for examples API.
+
+![](ewmER.JPG)
+![](statsER.JPG)
