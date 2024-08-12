@@ -1,10 +1,10 @@
 # java-explore-with-me
 
 This is my final project during my yandex practicum learning sessions.
-Main functionality is to manage, share and publish events.
+The main functionality is to manage, share and publish events.
 It's based on REST API principles and uses SPRING BOOT backed with POSTGRESQL to provide functionality.
 
-## Main features are:
+## The main features are:
 - events
     - categories
     - locations
@@ -17,7 +17,7 @@ It's based on REST API principles and uses SPRING BOOT backed with POSTGRESQL to
 - statistics
 
 ## How to:
-App is container-ready. Download zip, extract files and run file docker-compose.yml with:
+The app is container-ready. Download zip, extract files and run file docker-compose.yml with:
 
 ```
 sudo docker compose up
